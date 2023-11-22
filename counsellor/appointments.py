@@ -1,5 +1,6 @@
 import mysql.connector
-from datetime import datetime,timedelta
+from datetime import datetime
+
 
 def create_connection():
     connection = mysql.connector.connect(
@@ -24,3 +25,9 @@ def past_appointments(Counsellor_ID):
     connection.close()
 
     return appointments
+
+
+def get_datetime(appointment):
+    date_str = appointment["Date"]
+    time_str = appointment["Start_Time"]
+    return datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M:%S")

@@ -1,4 +1,5 @@
 import mysql.connector
+from datetime import datetime
 
 
 def create_connection():
@@ -22,6 +23,8 @@ def get_appointments_data():
 CREATE PROCEDURE GetAppointmentData()
 BEGIN
     SELECT
+        A.Date,
+        A.Start_Time,
         A.Appointment_ID,
         A.Student_ID,
         U.Student_Name,
@@ -31,12 +34,19 @@ BEGIN
         C.Counsellor_Name,
         C.Email AS Counsellor_Email,
         C.Mobile AS Counsellor_Mobile,
-        A.Date,
-        A.Start_Time,
-        C.Fees
+        C.Fees,
+        COUNT(A.Appointment_ID) AS TotalAppointmentsForStudent,
+        (
+            SELECT COUNT(Appointment_ID)
+            FROM Appointments
+            WHERE Counsellor_ID = A.Counsellor_ID
+        ) AS TotalAppointmentsForCounselor
     FROM Appointments A
     INNER JOIN Users U ON A.Student_ID = U.Student_ID
-    INNER JOIN Counsellor C ON A.Counsellor_ID = C.Counsellor_ID;
+    INNER JOIN Counsellor C ON A.Counsellor_ID = C.Counsellor_ID
+    GROUP BY A.Appointment_ID, A.Student_ID, U.Student_Name, U.Email, U.Mobile,
+             A.Counsellor_ID, C.Counsellor_Name, C.Email, C.Mobile,
+             A.Date, A.Start_Time, C.Fees;
 END
     """
 
@@ -50,3 +60,8 @@ END
     connection.close()
 
     return appointments_data
+
+
+def get_datetime(appointment):
+    date_str, time_str = appointment[:2]
+    return datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M:%S")

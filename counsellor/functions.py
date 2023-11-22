@@ -2,6 +2,7 @@ import streamlit as st
 from user_authentication import *
 from feedback import *
 from appointments import *
+from datetime import datetime
 
 Counsellor_ID = None
 
@@ -75,17 +76,38 @@ def feedback():
     feedbacks = feedback_recieved(Counsellor_ID)
 
     if not feedbacks:
-        st.warning("No appointments found.")
+        st.warning("No feedbacks found.")
     else:
         st.table(feedbacks)
 
 
 def appointments():
-    st.title("Previous Appointments")
+    st.title("Appointment History")
 
     appointments = past_appointments(Counsellor_ID)
+    current_datetime = datetime.now()
 
     if not appointments:
         st.warning("No appointments found.")
     else:
-        st.table(appointments)
+        previous_appointments = [
+            appointment
+            for appointment in appointments
+            if get_datetime(appointment) < current_datetime
+        ]
+        upcoming_appointments = [
+            appointment
+            for appointment in appointments
+            if get_datetime(appointment) >= current_datetime
+        ]
+        if upcoming_appointments:
+            st.header("Upcoming Appointments")
+            st.table(upcoming_appointments)
+        else:
+            st.info("No upcoming appointments found.")
+
+        if previous_appointments:
+            st.header("Previous Appointments")
+            st.table(previous_appointments)
+        else:
+            st.info("No previous appointments found.")

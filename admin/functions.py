@@ -5,7 +5,7 @@ from appointments import *
 
 
 def students():
-    st.title("Feedbacks")
+    st.title("Students")
 
     student = all_students()
 
@@ -16,7 +16,7 @@ def students():
 
 
 def counsellors():
-    st.title("Feedbacks")
+    st.title("Counsellors")
 
     counsellor = all_counsellors()
 
@@ -29,9 +29,30 @@ def counsellors():
 def appointments():
     st.title("Appointment Information")
 
-    appointments_data = get_appointments_data()
+    appointments = get_appointments_data()
+    current_datetime = datetime.now()
 
-    if not appointments_data:
+    if not appointments:
         st.warning("No appointments found.")
     else:
-        st.table(appointments_data)
+        previous_appointments = [
+            appointment
+            for appointment in appointments
+            if get_datetime(appointment) < current_datetime
+        ]
+        upcoming_appointments = [
+            appointment
+            for appointment in appointments
+            if get_datetime(appointment) >= current_datetime
+        ]
+        if upcoming_appointments:
+            st.header("Upcoming Appointments")
+            st.table(upcoming_appointments)
+        else:
+            st.info("No upcoming appointments found.")
+
+        if previous_appointments:
+            st.header("Previous Appointments")
+            st.table(previous_appointments)
+        else:
+            st.info("No previous appointments found.")

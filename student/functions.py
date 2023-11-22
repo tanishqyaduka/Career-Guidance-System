@@ -158,7 +158,7 @@ def appointments():
                         "Appointment slot already booked for the selected date and time."
                     )
                 else:
-                    st.error(f"Error: {err}")
+                    st.error("Appointment slot already booked for the selected date and time.")
 
 
 def colleges():
@@ -171,7 +171,6 @@ def colleges():
     if st.session_state.get("show_filters", False):
         st.write("### Filters")
 
-        ranking_filter = st.number_input("Filter by Ranking:")
         sort_order = st.radio(
             "Sort Order:", ["None", "Lowest to Highest", "Highest to Lowest"], key="3"
         )
@@ -184,7 +183,7 @@ def colleges():
         sort_order_sql = sort_mapping.get(sort_order, "")
 
         colleges = get_colleges(sort_order_sql)
-        if st.button("Clear Filters"):
+        if st.button("Clear Filters",key="5"):
             st.session_state.show_filters = False
             st.experimental_rerun()
 
