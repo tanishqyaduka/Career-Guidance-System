@@ -114,3 +114,33 @@ DELIMITER ;
 
     cursor.close()
     connection.close()
+
+
+def update_appointment(appointment_id, new_date, new_start_time):
+    connection = create_connection()
+    cursor = connection.cursor()
+
+    query = """
+    UPDATE Appointments
+    SET Date = %s, Start_Time = %s
+    WHERE Appointment_ID = %s
+    """
+    cursor.execute(query, (new_date, new_start_time, appointment_id))
+
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+
+def delete_appointment(appointment_id):
+    connection = create_connection()
+    cursor = connection.cursor()
+
+    query = "DELETE FROM Appointments WHERE Appointment_ID = %s"
+    cursor.execute(query, (appointment_id,))
+
+    connection.commit()
+
+    cursor.close()
+    connection.close()

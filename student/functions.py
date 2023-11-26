@@ -160,6 +160,20 @@ def appointments():
                 else:
                     st.error("Appointment slot already booked for the selected date and time.")
 
+    st.header("Update or Delete Appointment")
+    appointment_id = st.text_input("Enter Appointment ID:")
+    new_date = st.date_input("New Date:")
+    new_time_slots = generate_time_slots()
+    new_start_time = st.selectbox("New Start Time:", new_time_slots)
+
+    if st.button("Update Appointment"):
+        update_appointment(appointment_id, new_date, new_start_time)
+        st.success("Appointment updated successfully!")
+
+    if st.button("Delete Appointment"):
+        delete_appointment(appointment_id)
+        st.success("Appointment deleted successfully!")
+
 
 def colleges():
     colleges = get_colleges()

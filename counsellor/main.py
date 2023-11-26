@@ -8,7 +8,7 @@ menu = ["Home", "Sign Up", "Sign In", "Appointments", "Feedback"]
 tab = st.tabs(menu)
 
 with tab[0]:
-    st.title("Career Guidance System")
+    st.title("Counsellors Page")
 
 with tab[1]:
     sign_up()
